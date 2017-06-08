@@ -6,6 +6,7 @@ import (
 	"github.com/google/gopacket"
 	"github.com/mushorg/go-dpi"
 	"github.com/mushorg/go-dpi/classifiers"
+	"github.com/mushorg/go-dpi/wrappers"
 	"os"
 	"os/signal"
 )
@@ -23,6 +24,16 @@ func main() {
 	filename := flag.String("filename", "dumps/http.cap", "File to read packets from")
 
 	flag.Parse()
+
+	wrappers.InitializeWrappers()
+
+	defer func() {
+		wrappers.DestroyWrappers()
+		fmt.Println()
+		fmt.Println("Number of packets:", count)
+		fmt.Println("Number of packets identified:", idCount)
+		fmt.Println("Protocols identified:\n", protoCounts)
+	}()
 
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, os.Interrupt)
@@ -42,6 +53,16 @@ func main() {
 			} else {
 				fmt.Println("Could not identify")
 			}
+
+			protocol = wrappers.ClassifyFlow(flow)
+			if protocol != godpi.Unknown {
+				fmt.Printf("nDPI says %s\n", protocol)
+				idCount++
+				protoCounts[protocol]++
+			} else {
+				fmt.Println("nDPI could not identify")
+			}
+
 			select {
 			case <-signalChannel:
 				fmt.Println("Received interrupt signal")
@@ -49,14 +70,10 @@ func main() {
 			default:
 			}
 			if intSignal {
-				break
+				return
 			}
 			count++
 		}
-		fmt.Println()
-		fmt.Println("Number of packets:", count)
-		fmt.Println("Number of packets identified:", idCount)
-		fmt.Println("Protocols identified:\n", protoCounts)
 	} else {
 		fmt.Println("Error:", err)
 	}
