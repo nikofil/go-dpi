@@ -1,7 +1,7 @@
 package wrappers
 
-// #cgo CFLAGS: -I/home/av/workspace/nDPI/src/include
-// #cgo LDFLAGS: /home/av/workspace/nDPI/lib/libndpi.a -lpcap -lm -pthread
+// #cgo CFLAGS: -I/usr/local/include/
+// #cgo LDFLAGS: /usr/local/lib/libndpi.a -lpcap -lm -pthread
 // #include "nDPI_wrapper_impl.h"
 import "C"
 import (

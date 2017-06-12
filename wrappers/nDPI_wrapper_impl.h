@@ -1,5 +1,5 @@
 #include <pcap.h>
-#include "ndpi_main.h"
+#include <libndpi-1.8.0/libndpi/ndpi_main.h>
 
 extern int ndpi_initialize();
 extern void ndpi_destroy(void);

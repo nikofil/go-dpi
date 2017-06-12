@@ -55,8 +55,6 @@ extern int ndpi_initialize() {
 
   set_ndpi_malloc(malloc);
   set_ndpi_free(free);
-  set_ndpi_flow_malloc(NULL);
-  set_ndpi_flow_free(NULL);
   ndpi_struct = ndpi_init_detection_module();
 
   if (ndpi_struct == NULL) {
